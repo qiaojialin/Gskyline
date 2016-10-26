@@ -3,34 +3,34 @@ import java.util.List;
 public class SkylineLayers {
 
 	public List<SkylineLayer> layers;
-
-
+	
 	public SkylineLayers() {
 		layers = new ArrayList<>();
 	}
 
+
 	public void createSkylineLayers(PointSet pointSet) {
 		List<Point> pSet = pointSet.pSet;
-		pSet.get(0).layer = 0;
+		pSet.get(0).layer = 1;
 
-		//Skyline layer浠�0寮�濮嬭鏁�
+		//Skyline layer从0开始计数
 		int maxLayer = 0;
 		SkylineLayer layer0= new SkylineLayer(0);
-		//绗竴灞傜殑鍒濆灏剧偣鏄痯0锛屽悓鏃跺姞鍒扮涓�灞傜偣闆嗕腑
+		//第一层的初始尾点是p0，同时加到第一层点集中
 		layer0.tail = pSet.get(0);
 		layer0.points.add(0);
 		layers.add(layer0);
 
 		for(int i=1; i<pSet.size(); i++) {
 
-			//濡傛灉绗�0灞備笉dominate姝ょ偣锛屽垯鍙樻垚绗�0灞傜殑灏剧偣
-			if(!layer0.dominate(pointSet, pSet.get(i))) {
+			//如果第0层不dominate此点，则变成第0层的尾点
+			if(!layer0.dominate(pointSet,  pSet.get(i))) {
 				pSet.get(i).layer = 0;
 				layer0.tail = pSet.get(i);
 				layer0.points.add(i);
 			}
 
-			//濡傛灉鏈�楂樺眰dominate姝ょ偣锛屽垯鏂板缓涓�灞�
+			//如果最高层dominate此点，则新建一层
 			else if(layers.get(maxLayer).dominate(pointSet,  pSet.get(i))) {
 				SkylineLayer newLayer = new SkylineLayer(++maxLayer);
 				pSet.get(i).layer = maxLayer;
@@ -39,13 +39,13 @@ public class SkylineLayers {
 				layers.add(newLayer);
 			}
 
-			//浜屽垎鏌ユ壘鐐瑰睘浜庣殑layer
+			//二分查找点属于的layer
 			else {
 				int low = 1;
 				int high = layers.size()-1;
 				while(low <= high){
 					int middle = (low + high) / 2;
-					//绗琺iddle灞備笉dominate姝ょ偣锛宮iddle-1灞俤ominate姝ょ偣锛屽垯灞炰簬middle灞�
+					//第middle层不dominate此点，middle-1层dominate此点，则属于middle层
 					if(!layers.get(middle).dominate(pointSet,  pSet.get(i)) && layers.get(middle-1).dominate(pointSet,  pSet.get(i))) {
 						pSet.get(i).layer = middle;
 						layers.get(middle).tail =  pSet.get(i);
