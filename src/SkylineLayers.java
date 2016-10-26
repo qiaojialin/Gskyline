@@ -11,7 +11,7 @@ public class SkylineLayers {
 
 	public void createSkylineLayers(PointSet pointSet) {
 		List<Point> pSet = pointSet.pSet;
-		pSet.get(0).layer = 1;
+		pSet.get(0).layer = 0;
 
 		//Skyline layer从0开始计数
 		int maxLayer = 0;
@@ -59,11 +59,6 @@ public class SkylineLayers {
 
 			}
 		}
-
-	}
-	
-	public List<List<Point>> nDsSkyline(List<Point> plist, int ds) {
-		return null;
 	}
 	
 	public void makeDSG(PointSet pointSet) {
@@ -82,7 +77,19 @@ public class SkylineLayers {
 		}
 	}
 
-
+	public void preProcessing(PointSet pointSet, int k, ResultSet resultSet) {
+		List<Point> pSet = pointSet.pSet;
+		for(SkylineLayer layer: layers) {
+			for(Integer p: layer.points) {
+				Unit unit = pSet.get(p).unit();
+				if(unit.size() > k){
+					layer.points.remove(p);
+				} else if(unit.size() == k) {
+					SGroup sGroup = new SGroup(unit);
+					resultSet.sGroups.add(sGroup);
+				}
+			}
+		}
+	}
 
 }
-

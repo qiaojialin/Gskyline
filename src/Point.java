@@ -39,4 +39,13 @@ public class Point {
 		return flag;
 	}
 
+	public Unit unit() {
+		List<Integer> points = new ArrayList<>();
+		points.addAll(parents);
+		points.add(index);
+		Unit units = new Unit(points);
+		return units;
+	}
+
 }
+

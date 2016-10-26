@@ -13,7 +13,9 @@ public class PointSet {
 	public List<Point> pSet;
 
 	public PointSet() {
+
 		pSet = new ArrayList<>();
+
 	}
 
 	public void readFromFile(String path) {
