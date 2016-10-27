@@ -10,6 +10,7 @@ public class ResultSet {
     }
 
     public void print() {
+        System.out.println("result set has: " + sGroups.size());
         for(SGroup sGroup: sGroups) {
             sGroup.print();
         }

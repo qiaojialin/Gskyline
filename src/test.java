@@ -1,28 +1,27 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2016/10/26.
  */
 public class test {
     public static void main(String[] args) {
-        User user = new User();
-        user.a = 1;
-        user.b = 2;
-        set(user);
-        System.out.print(user.a);
-    }
-
-    public static void set(User u) {
-        User user = u;
-        user.a = 2;
-    }
-
-    static class User {
-        public int a;
-        public int b;
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Iterator<Integer> iterator = list.iterator();
+        while(iterator.hasNext()) {
+            int i = iterator.next();
+            if(i == 2)
+                iterator.remove();
+        }
+//        for(Integer i: list) {
+//            if(i == 2)
+//                list.remove(i);
+//        }
+        for(Integer i: list) {
+            System.out.println(i);
+        }
     }
 }
 

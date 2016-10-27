@@ -3,7 +3,7 @@ import java.util.List;
 
 
 public class SkylineLayer {
-    ArrayList<Integer> points;
+    List<Integer> points = new ArrayList<>();
     int layer = -1;
     Point tail = null;
 
@@ -27,5 +27,13 @@ public class SkylineLayer {
             //如果本层的点都不dominate此点，则本层不dominate此点
             return false;
         }
+    }
+
+    public void print(){
+        System.out.print("layer" + layer + ": ");
+        for(Integer i: points) {
+            System.out.print(" " + i);
+        }
+        System.out.println();
     }
 }
