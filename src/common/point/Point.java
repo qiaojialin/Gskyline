@@ -1,3 +1,7 @@
+package common.point;
+
+import common.unit.Unit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class Point {
 	}
 
 	public void print() {
-		System.out.print("layer：" + layer + " index：" + index + " ");
+		System.out.print("layer：" + layer + " index：" + index + "  data:");
 		for(int i=0; i<dimension; i++) {
 			System.out.print(data[i] + " ");
 		}
@@ -43,7 +47,7 @@ public class Point {
 		List<Integer> points = new ArrayList<>();
 		points.addAll(parents);
 		points.add(index);
-		Unit units = new Unit(points);
+		Unit units = new Unit(points, index);
 		return units;
 	}
 

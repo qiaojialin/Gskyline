@@ -1,20 +1,14 @@
+import algorithm.UnitWise;
+import common.layer.SkylineLayers;
+import common.point.PointSet;
+import common.result.ResultSet;
 
 public class GSkyline {
     public static void main(String[] args) {
-        PointSet pointSet = new PointSet();
-        String path = "E:\\datasets\\anti_2.txt";
-        pointSet.readFromFile(path);
-        pointSet.sort();
-
+        String path = "E:\\datasets\\test.txt";
         int k = 4;
-        ResultSet resultSet = new ResultSet();
+        ResultSet resultSet = new UnitWise().unitWise(path, k);
 
-        SkylineLayers skylineLayers = new SkylineLayers();
-        skylineLayers.createSkylineLayers(pointSet);
-
-        skylineLayers.makeDSG(pointSet);
-        skylineLayers.preProcessing(pointSet, k, resultSet);
-
-
+        resultSet.print();
     }
 }

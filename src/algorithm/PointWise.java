@@ -1,5 +1,12 @@
-import java.util.ArrayList;
+
+package algorithm;
+
+import common.layer.SkylineLayer;
+import common.point.PointSet;
+import common.point.*;
+import common.result.SGroup;
 import java.util.List;
+import java.util.ArrayList;
 
 public class PointWise {
 	public void generateGroups(List<SkylineLayer> layers, PointSet pointSet, int k) {

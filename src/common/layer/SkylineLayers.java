@@ -1,4 +1,13 @@
+package common.layer;
+
+import common.point.Point;
+import common.point.PointSet;
+import common.result.ResultSet;
+import common.result.SGroup;
+import common.unit.Unit;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 public class SkylineLayers {
 
@@ -13,25 +22,28 @@ public class SkylineLayers {
 		List<Point> pSet = pointSet.pSet;
 		pSet.get(0).layer = 1;
 
-		//Skyline layer从0开始计数
+		//Skyline layer start from 0
 		int maxLayer = 0;
 		SkylineLayer layer0= new SkylineLayer(0);
-		//第一层的初始尾点是p0，同时加到第一层点集中
+		//the layer0's tail point is point0
 		layer0.tail = pSet.get(0);
 		layer0.points.add(0);
 		layers.add(layer0);
 
 		for(int i=1; i<pSet.size(); i++) {
+//			System.out.println(i);
 
-			//如果第0层不dominate此点，则变成第0层的尾点
+			//if layer0 don't dominate the point, make the point as the tail point of layer0
 			if(!layer0.dominate(pointSet,  pSet.get(i))) {
+//				System.out.println("layer0");
 				pSet.get(i).layer = 0;
 				layer0.tail = pSet.get(i);
 				layer0.points.add(i);
 			}
 
-			//如果最高层dominate此点，则新建一层
+			//if maxlayer dominate the point, create a new layer
 			else if(layers.get(maxLayer).dominate(pointSet,  pSet.get(i))) {
+//				System.out.println("new layer");
 				SkylineLayer newLayer = new SkylineLayer(++maxLayer);
 				pSet.get(i).layer = maxLayer;
 				newLayer.tail = pSet.get(i);
@@ -39,8 +51,9 @@ public class SkylineLayers {
 				layers.add(newLayer);
 			}
 
-			//二分查找点属于的layer
+			//binary search to find layer the point belongs to
 			else {
+//				System.out.println("binary search to find layer");
 				int low = 1;
 				int high = layers.size()-1;
 				while(low <= high){
@@ -50,6 +63,7 @@ public class SkylineLayers {
 						pSet.get(i).layer = middle;
 						layers.get(middle).tail =  pSet.get(i);
 						layers.get(middle).points.add(i);
+						break;
 					} else if(layers.get(middle).dominate(pointSet, pSet.get(i))) {
 						low = middle + 1;
 					} else {
@@ -80,15 +94,34 @@ public class SkylineLayers {
 	public void preProcessing(PointSet pointSet, int k, ResultSet resultSet) {
 		List<Point> pSet = pointSet.pSet;
 		for(SkylineLayer layer: layers) {
-			for(Integer p: layer.points) {
+			Iterator<Integer> iterator = layer.points.iterator();
+			while(iterator.hasNext()) {
+				int p = iterator.next();
 				Unit unit = pSet.get(p).unit();
-				if(unit.size() > k){
-					layer.points.remove(p);
+				if(unit.size() > k) {
+					iterator.remove();
 				} else if(unit.size() == k) {
 					SGroup sGroup = new SGroup(unit);
 					resultSet.sGroups.add(sGroup);
+//					System.out.println("@++++<<<000: " + sGroup);
+					iterator.remove();
 				}
 			}
+		}
+		//delete empty layer
+		Iterator<SkylineLayer> iterator = layers.iterator();
+		while(iterator.hasNext()) {
+			SkylineLayer layer = iterator.next();
+			if(layer.points.isEmpty()) {
+				iterator.remove();
+			}
+		}
+	}
+
+	public void print() {
+		System.out.println("common.layer.SkylineLayers:");
+		for(SkylineLayer layer: layers) {
+			layer.print();
 		}
 	}
 
