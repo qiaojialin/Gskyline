@@ -6,7 +6,6 @@ public class PointWise {
 		if(layers == null || pointSet == null)
 			System.out.println("layers is null or pointset is null");
 		ArrayList<SGroup> result = new ArrayList<>();
-		ArrayList<SGroup> curGroupLayer = new ArrayList<>();
 		for(int i = 1; i <= k; i++) {
 			for(SGroup sg: result) {
 				ArrayList<Integer> childrenSet = new ArrayList<>();
@@ -24,9 +23,28 @@ public class PointWise {
 					if(pj.layer - max >= 2)
 						tailSet.remove(index);
 				}
-				for(Integer remainp: tailSet) {
-					
+			
+				if(result.isEmpty()) {
+					for(Integer etailp: tailSet) {
+						ArrayList<Integer> a = new ArrayList<>();
+						a.add(etailp);
+						SGroup tmpGroup = new SGroup(a);
+						result.add(tmpGroup);
+					}
+				} else {
+					ArrayList<SGroup> newresult = new ArrayList<>();
+					for(SGroup p: result) {
+						for(Integer etailp: tailSet) {
+							ArrayList<Integer> a = new ArrayList<>();
+							a.addAll(p.points);
+							a.add(etailp);
+							SGroup tmpGroup = new SGroup(a);
+							newresult.add(tmpGroup);
+						}
+					}
+					result = newresult;
 				}
+			
 			}
 			
 		}		
