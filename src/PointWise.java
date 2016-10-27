@@ -31,6 +31,7 @@ public class PointWise {
 			
 		}		
 		
+
 	}
 	public int maxLayer(SGroup sgroup, PointSet pointSet) {
 		int max = -1;
@@ -40,6 +41,7 @@ public class PointWise {
 				max = a.layer;
 		}
 		return max;
+
 	}
 	
 	

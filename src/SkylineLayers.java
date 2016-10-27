@@ -59,11 +59,6 @@ public class SkylineLayers {
 
 			}
 		}
-
-	}
-	
-	public List<List<Point>> nDsSkyline(List<Point> plist, int ds) {
-		return null;
 	}
 	
 	public void makeDSG(PointSet pointSet) {
@@ -81,15 +76,20 @@ public class SkylineLayers {
 			}
 		}
 	}
-	
-	
-	public void preProcessing(PointSet pointSet) {
-		
+
+	public void preProcessing(PointSet pointSet, int k, ResultSet resultSet) {
+		List<Point> pSet = pointSet.pSet;
+		for(SkylineLayer layer: layers) {
+			for(Integer p: layer.points) {
+				Unit unit = pSet.get(p).unit();
+				if(unit.size() > k){
+					layer.points.remove(p);
+				} else if(unit.size() == k) {
+					SGroup sGroup = new SGroup(unit);
+					resultSet.sGroups.add(sGroup);
+				}
+			}
+		}
 	}
 
-	
-	
-
-
 }
-
