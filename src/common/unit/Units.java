@@ -1,8 +1,10 @@
+package common.unit;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Units {
-    List<Integer> units = new ArrayList<>();
+    public List<Integer> units = new ArrayList<>();
 
     public void add(int i) {
 

@@ -1,10 +1,15 @@
+package common.result;
+
+import common.unit.Unit;
+import common.unit.Units;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class SGroup {
-	List<Integer> points = new ArrayList<>();
+	public List<Integer> points = new ArrayList<>();
 
 	public SGroup(Unit unit) {
 

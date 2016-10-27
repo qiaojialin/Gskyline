@@ -1,8 +1,39 @@
+package algorithm;
+
+import common.layer.SkylineLayer;
+import common.layer.SkylineLayers;
+import common.point.Point;
+import common.point.PointSet;
+import common.result.ResultSet;
+import common.result.SGroup;
+import common.unit.Unit;
+import common.unit.Units;
+
 import java.util.*;
 
 public class UnitWise {
 
 	private List<Unit> unitSet = new ArrayList<>(); //初始单元素unit的集合
+
+	public ResultSet unitWise(String path, int k) {
+		PointSet pointSet = new PointSet();
+		pointSet.readFromFile(path);
+		pointSet.sort();
+//        pointSet.print();
+
+		SkylineLayers skylineLayers = new SkylineLayers();
+		skylineLayers.createSkylineLayers(pointSet);
+//        skylineLayers.print();
+
+		ResultSet resultSet = new ResultSet();
+		skylineLayers.makeDSG(pointSet);
+		skylineLayers.preProcessing(pointSet, k, resultSet);
+//        skylineLayers.print();
+//        System.out.println();
+
+		new UnitWise().generateGroups(skylineLayers, pointSet, k, resultSet);
+		return resultSet;
+	}
 
 	public void generateGroups(SkylineLayers layers, PointSet pointSet, int k, ResultSet resultSet) {
 		List<Point> pSet = pointSet.pSet;

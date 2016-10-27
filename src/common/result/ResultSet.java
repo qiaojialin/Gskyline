@@ -1,9 +1,11 @@
+package common.result;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ResultSet {
-    List<SGroup> sGroups = new ArrayList<>();
+    public List<SGroup> sGroups = new ArrayList<>();
 
     public void add(SGroup sGroup) {
         sGroups.add(sGroup);

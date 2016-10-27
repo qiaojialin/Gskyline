@@ -1,3 +1,11 @@
+package common.layer;
+
+import common.point.Point;
+import common.point.PointSet;
+import common.result.ResultSet;
+import common.result.SGroup;
+import common.unit.Unit;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -111,7 +119,7 @@ public class SkylineLayers {
 	}
 
 	public void print() {
-		System.out.println("SkylineLayers:");
+		System.out.println("common.layer.SkylineLayers:");
 		for(SkylineLayer layer: layers) {
 			layer.print();
 		}

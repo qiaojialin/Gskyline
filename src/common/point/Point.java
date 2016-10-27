@@ -1,3 +1,7 @@
+package common.point;
+
+import common.unit.Unit;
+
 import java.util.ArrayList;
 import java.util.List;
 
