@@ -10,9 +10,22 @@ import common.result.SGroup;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+
+/**
+ * PointWise class implements the PointWise algorithm for GSkyline
+ * @author thinkpad
+ *
+ */
 
 public class PointWise {
 	
+	/**
+	 * 通过对原始数据进行读取，生成skyline layer，创建DSG图，预处理剪枝，pointwise算法处理，生成所有的GSkyline集合
+	 * @param path 原始数据路径
+	 * @param k GSkyline每个group的大小
+	 * @return 所有GSkyline集合组成的结果集合
+	 */
 	public ResultSet pointWise(String path, int k) {
 		PointSet pointSet = new PointSet();
 		pointSet.readFromFile(path);
@@ -21,26 +34,36 @@ public class PointWise {
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
-        skylineLayers.print();
+  //      skylineLayers.print();
 
 		ResultSet resultSet = new ResultSet();
 		skylineLayers.makeDSG(pointSet);
 		skylineLayers.preProcessing(pointSet, k, resultSet);
-//        skylineLayers.print();
+  //      skylineLayers.print();
 //        System.out.println("done");
+        
+        long start = System.currentTimeMillis();
 
 		List<SGroup> tmpResult = new PointWise().generateGroups(skylineLayers.layers, pointSet, k);
+		
+		long end = System.currentTimeMillis();
+		System.out.println("PointWise"+(end-start));
 		
 		for(SGroup sgroup: tmpResult)
 			resultSet.add(sgroup);
 		return resultSet;
 	}
 	
+	/**
+	 * 核心算法PointWise，生成所有的skyline group
+	 * @param layers 经过预处理之后的skyline layers
+	 * @param pointSet 经过预处理的输入点集
+	 * @param k 需要的skyline group大小
+	 * @return 所有skyline group,以链表形式存储在SGroup中
+	 */
 	public ArrayList<SGroup> generateGroups(List<SkylineLayer> layers, PointSet pointSet, int k) {
-		//System.out.println(isSkylineLayer(3, pointSet));
-		for(SkylineLayer layer: layers) {
-			layer.print();
-		}
+	//	System.out.println("layers size:"+layers.size());
+		
 		
 		if(layers == null || pointSet == null)
 			System.out.println("layers is null or pointset is null");
@@ -54,9 +77,9 @@ public class PointWise {
 			SGroup group = new SGroup(initial);
 			result.add(group);			
 		}
-		//System.out.println("done");
 		
 		for(int i = 2; i <= k; i++) {
+			
 			//result中的每一个sgroup
 			ArrayList<SGroup> newresult = new ArrayList<>();
 			for(SGroup sg: result) {
@@ -70,19 +93,21 @@ public class PointWise {
 				int max = maxLayer(sg, pointSet);
 				//求这个sgroup的tailset,并对其进行剪枝
 				List<Integer> tailSet = getTailSet(layers, sg, pointSet);
-				List<Integer> tobedelete = new ArrayList<>();
-				for(int index = 0; index < tailSet.size(); index++) {
-					Integer pt = tailSet.get(index);
-					if(!childrenSet.contains(pt) && !isSkylineLayer(pt, pointSet))
-						tobedelete.add(pt);
-						//tailSet.remove(index);
+
+				
+				Iterator<Integer> it = tailSet.iterator();
+				while(it.hasNext()) {
+					Integer pt = it.next();
+					if(!childrenSet.contains(pt) && !isSkylineLayer(pt, pointSet)) {
+						it.remove();
+						continue;
+					}
 					Point pj = pointSet.pSet.get(pt);
 					if(pj.layer - max >= 2)
-						tobedelete.add(pt);
-						//tailSet.remove(index);
+						it.remove();					
 				}
-
-				tailSet.removeAll(tobedelete);
+				
+				
 				
 				for(Integer etailp: tailSet) {
 					ArrayList<Integer> a = new ArrayList<>();
@@ -103,6 +128,13 @@ public class PointWise {
 		
 
 	}
+	
+	/**
+	 * Sgroup中的点的最大层数
+	 * @param sgroup 给定的sgroup
+	 * @param pointSet 包含信息的点集
+	 * @return sgroup中的最大层数点的层数
+	 */
 	public int maxLayer(SGroup sgroup, PointSet pointSet) {
 		int max = -1;
 		for(Integer index: sgroup.points) {
@@ -114,53 +146,68 @@ public class PointWise {
 
 	}
 	
-	
-	//pt is the point index in the pointSet; 
-	//to judge whether this point is skyline layer
+
+	/**
+	 * 判断一个点是不是skyline layer,即判断一个点的层数是不是0
+	 * @param pt 需要判断的点在pointSet中的下标
+	 * @param pointSet 含有信息的点集
+	 * @return 若这个点是skyline layer则返回true;否则返回false
+	 */
 	public boolean isSkylineLayer(int pt, PointSet pointSet) {
 		Point p = pointSet.pSet.get(pt);
 		if(p.layer == 0) return true;
 		return false;
 	}
 	
+	/**
+	 * 寻找一个sgroup的尾集，即为这个group中的每一个元素中，先找到在处理过的skyline layers中位置最靠后的点
+	 * （位置靠后代表层数大，或在层数相同时在所在层的下标大）对于最靠后的点，取比这个点更靠后的所有点的集合
+	 * @param layers 经过预处理之后的skyline layers
+	 * @param p 输入的sgroup
+	 * @param pointSet 经过处理的点集
+	 * @return 这个sgroup的尾集
+	 */
 	public List<Integer> getTailSet(List<SkylineLayer> layers, SGroup p, PointSet pointSet) {
+		
 		List<Integer> point = p.points;
-		int maxlen = Integer.MAX_VALUE;
 		List<Integer> result = new ArrayList<>();
-		for(Integer i: point) {
-			List<Integer> tmp = tailList(layers, i, pointSet);
-			if(tmp.size() < maxlen) {
-				result = tmp;
-				maxlen = tmp.size();				
+		
+		int maxlayer = -1, maxindex = -1;
+		for(Integer pt: point) {
+			Point aPoint = pointSet.pSet.get(pt);
+			int layer = aPoint.layer;
+			int index = layers.get(layer).points.indexOf(pt);
+			if(layer >= maxlayer) {
+					maxlayer = layer;
+					maxindex = index;
+			} else if(layer == maxlayer) {
+				if(index > maxindex) {
+					maxlayer = layer;
+					maxindex = index;
+				}
+				
 			}
 		}
-		return result;
-	}
-	
-	//give layers  and a point index in the pointSet
-	//return the tail list of this point
-	public List<Integer> tailList(List<SkylineLayer> layers, int p, PointSet pointSet) {
 		
-		
-		Point point = pointSet.pSet.get(p);
-		int curlayer = point.layer;
-		List<Integer> result = new ArrayList<>();
 		//add points in the latter layer to the result
-		for(int i = layers.size()-1; i > curlayer; i--) {
+		for(int i = layers.size()-1; i > maxlayer; i--) {
 			result.addAll(layers.get(i).points);
 		}
 		//for the current layer, add the points which has larger index than this point
-		List<Integer> curlayerPoints = layers.get(curlayer).points;
-		int index = curlayerPoints.indexOf(p);
-		for(int i = index+1; i < curlayerPoints.size(); i++)
-			result.add(curlayerPoints.get(i));
-		
+		List<Integer> curlayerPoints = layers.get(maxlayer).points;
 
-		
-		
+		for(int i = maxindex+1; i < curlayerPoints.size(); i++)
+			result.add(curlayerPoints.get(i));
+				
 		return result;
 	}
 	
+	/**
+	 * 判断一个sgroup是否符合合法-合法的sgroup的所有父节点都在这个sgroup中
+	 * @param sg 给定的sgroup
+	 * @param pointSet 经过处理的点集
+	 * @return 若合法则返回true,否则返回false
+	 */
 	public boolean isValidSGroup(SGroup sg, PointSet pointSet) {
 		List<Integer> grouplist = sg.points;
 		for(Integer pt: grouplist) {
@@ -171,8 +218,5 @@ public class PointWise {
 		}
 		return true;
 	}
-	
-	
-	
 	
 }

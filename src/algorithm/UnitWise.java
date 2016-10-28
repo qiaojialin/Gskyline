@@ -10,11 +10,25 @@ import common.unit.Unit;
 import common.unit.Units;
 
 import java.util.*;
-
+/**
+ * UnitWise class implements the UnitWise algorithm for GSkyline
+ * @author thinkpad
+ *
+ */
 public class UnitWise {
+	
+	/**
+	 * 储存unit集合
+	 */
 
 	private List<Unit> unitSet = new ArrayList<>(); //初始单元素unit的集合
-
+	
+	/**
+	 * 通过对原始数据进行读取，生成skyline layer，创建DSG图，预处理剪枝，unitwise算法处理，生成所有的GSkyline集合
+	 * @param path 原始数据路径
+	 * @param k GSkyline每个group的大小
+	 * @return 所有GSkyline集合组成的结果集合
+	 */
 	public ResultSet unitWise(String path, int k) {
 		PointSet pointSet = new PointSet();
 		pointSet.readFromFile(path);
@@ -24,21 +38,36 @@ public class UnitWise {
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
-//        skylineLayers.print();
-		System.out.println("2");
+//       skylineLayers.print();
+		
 
 		ResultSet resultSet = new ResultSet();
 		skylineLayers.makeDSG(pointSet);
 		skylineLayers.preProcessing(pointSet, k, resultSet);
-//        skylineLayers.print();
+       skylineLayers.print();
 //        System.out.println();
 		System.out.println("3");
+		
+		long start = System.currentTimeMillis();
 
 		new UnitWise().generateGroups(skylineLayers, pointSet, k, resultSet);
+		
+		long end = System.currentTimeMillis();
+		System.out.println("UnitWise"+(end-start));
 		return resultSet;
 	}
+	
+	
+	/**
+	 * 核心算法unitWise，生成所有的skyline group
+	 * @param layers 经过预处理之后的skyline layers
+	 * @param pointSet 经过预处理的输入点集
+	 * @param k 需要的skyline group大小
+	 * @param resultSet 存放所有skyline group
+	 */
 
 	public void generateGroups(SkylineLayers layers, PointSet pointSet, int k, ResultSet resultSet) {
+		System.out.println("layers"+layers.layers.size());
 		List<Point> pSet = pointSet.pSet;
 		for(SkylineLayer layer: layers.layers) {
 			for(int p: layer.points) {
@@ -150,7 +179,11 @@ public class UnitWise {
 		}
 	}
 
-	//查看此unit以及后面所有并集的元素个数
+	/**
+	 * 查看此unit以及后面所有并集的元素个数
+	 * @param u 输入的unit集合
+	 * @return 所有并集元素的个数
+	 */
 	public int lastSize(int u) {
 		List<Integer> last = new ArrayList<>();
 		for(int i = u; i< unitSet.size(); i++) {
@@ -161,7 +194,11 @@ public class UnitWise {
 		return last.size();
 	}
 
-	//tail set
+	/**
+	 * 计算一个集合的尾集
+	 * @param units 输入的unit集合
+	 * @return 这个集合的尾集
+	 */
 	public List<Integer> tailSet(Units units) {
 
 		int maxIndex = units.get(units.units.size()-1);
