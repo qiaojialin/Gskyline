@@ -19,17 +19,20 @@ public class UnitWise {
 		PointSet pointSet = new PointSet();
 		pointSet.readFromFile(path);
 		pointSet.sort();
+		System.out.println("1");
 //        pointSet.print();
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
 //        skylineLayers.print();
+		System.out.println("2");
 
 		ResultSet resultSet = new ResultSet();
 		skylineLayers.makeDSG(pointSet);
 		skylineLayers.preProcessing(pointSet, k, resultSet);
 //        skylineLayers.print();
 //        System.out.println();
+		System.out.println("3");
 
 		new UnitWise().generateGroups(skylineLayers, pointSet, k, resultSet);
 		return resultSet;

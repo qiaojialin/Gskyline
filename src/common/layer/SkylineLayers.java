@@ -20,7 +20,8 @@ public class SkylineLayers {
 
 	public void createSkylineLayers(PointSet pointSet) {
 		List<Point> pSet = pointSet.pSet;
-		pSet.get(0).layer = 1;
+		
+		pSet.get(0).layer = 0;
 
 		//Skyline layer start from 0
 		int maxLayer = 0;
