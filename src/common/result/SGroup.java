@@ -7,14 +7,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
+/**
+ * 一个skylinegroup，其中包含了点的下标的集合
+ * @author thinkpad
+ *
+ */
 public class SGroup {
+	/**
+	 * 一个skylinegroup中的点的下标集合
+	 */
 	public List<Integer> points = new ArrayList<>();
 
 	public SGroup(Unit unit) {
 
 		points = unit.unit;
 		sort();
+	}
+	
+	/**
+	 * 用一个点的下标集合初始化sgroup
+	 * @param p 点下标集合
+	 */
+	public SGroup(List<Integer> p) {
+		points = p;
 	}
 
 	public SGroup(List<Unit> unitSet, Units units) {
@@ -33,7 +48,10 @@ public class SGroup {
 			}
 		});
 	}
-
+	
+	/**
+	 * 打印sgroup信息
+	 */
 	public void print() {
 		for(int p: points) {
 			System.out.print(p + " ");

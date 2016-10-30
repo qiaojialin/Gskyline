@@ -9,17 +9,29 @@ import common.unit.Unit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+/**
+ * SkylineLayers储存了点集形成的所有skyline layer，并包含了生成dsg，预处理操作
+ * @author thinkpad
+ *
+ */
 public class SkylineLayers {
-
+	/**
+	 * 所有的skyline layers
+	 */
 	public List<SkylineLayer> layers;
-
-
+	
 	public SkylineLayers() {
 		layers = new ArrayList<>();
 	}
 
+	/**
+	 * 形成所有的skyline layers，对成员变量layers进行更新
+	 * @param pointSet 给定点集
+	 */
 	public void createSkylineLayers(PointSet pointSet) {
+		
 		List<Point> pSet = pointSet.pSet;
+		
 		pSet.get(0).layer = 0;
 
 		//Skyline layer start from 0
@@ -73,9 +85,15 @@ public class SkylineLayers {
 
 			}
 		}
+
 	}
 	
+	/**
+	 * 根据成员变量layers生成dsg并对点集进行更新（点集的成员变量parents and children）
+	 * @param pointSet 给定点集
+	 */
 	public void makeDSG(PointSet pointSet) {
+
 		List<Point> pSet = pointSet.pSet;
 		for(int i=0; i<pSet.size(); i++) {
 			int currentLayer = pSet.get(i).layer;
@@ -85,13 +103,21 @@ public class SkylineLayers {
 					if(pSet.get(p).dominate(pSet.get(i))) {
 						pSet.get(p).children.add(i);
 						pSet.get(i).parents.add(p);
+				//		System.out.println("haha");
 					}
 				}
 			}
 		}
-	}
 
+	}
+	/**
+	 * 
+	 * @param pointSet 给定点集
+	 * @param k 需要的sgroup大小
+	 * @param resultSet 预处理时将恰好得到的满足条件的sgroup放入结果集
+	 */
 	public void preProcessing(PointSet pointSet, int k, ResultSet resultSet) {
+
 		List<Point> pSet = pointSet.pSet;
 		for(SkylineLayer layer: layers) {
 			Iterator<Integer> iterator = layer.points.iterator();
