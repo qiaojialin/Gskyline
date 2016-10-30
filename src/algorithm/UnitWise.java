@@ -33,20 +33,22 @@ public class UnitWise {
 		PointSet pointSet = new PointSet();
 		pointSet.readFromFile(path);
 		pointSet.sort();
-		System.out.println("1");
+//		System.out.println("1");
 //        pointSet.print();
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
-//       skylineLayers.print();
-		
+   //    skylineLayers.print();
+//		System.out.println("2");
 
 		ResultSet resultSet = new ResultSet();
-		skylineLayers.makeDSG(pointSet);
+		skylineLayers.makeDSG(pointSet, k);
+//		 skylineLayers.print();
+//		System.out.println("3");
 		skylineLayers.preProcessing(pointSet, k, resultSet);
-       skylineLayers.print();
+      // skylineLayers.print();
 //        System.out.println();
-		System.out.println("3");
+//		System.out.println("3");
 		
 		long start = System.currentTimeMillis();
 
@@ -67,7 +69,7 @@ public class UnitWise {
 	 */
 
 	public void generateGroups(SkylineLayers layers, PointSet pointSet, int k, ResultSet resultSet) {
-		System.out.println("layers"+layers.layers.size());
+	//	System.out.println("layers"+layers.layers.size());
 		List<Point> pSet = pointSet.pSet;
 		for(SkylineLayer layer: layers.layers) {
 			for(int p: layer.points) {

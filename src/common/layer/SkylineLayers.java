@@ -92,13 +92,47 @@ public class SkylineLayers {
 	 * 根据成员变量layers生成dsg并对点集进行更新（点集的成员变量parents and children）
 	 * @param pointSet 给定点集
 	 */
-	public void makeDSG(PointSet pointSet) {
+	public void makeDSG(PointSet pointSet, int k) {
 
 		List<Point> pSet = pointSet.pSet;
-		for(int i=0; i<pSet.size(); i++) {
+		SkylineLayer layer = null;
+		//从第0层到第k-2层
+		for(int i = 0; i < k-1; i++) {
+			List<Integer> player = layers.get(i).points;
+			//对这一层的每一个点
+			for(Integer pt: player) {
+				//和他们下面层数的每个点
+				Point point = pSet.get(pt);
+				for(int j = i+1; j < k; j++) {
+					List<Integer> nextLayer = layers.get(j).points;
+					for(Integer nextpt: nextLayer) {
+						Point point2 = pSet.get(nextpt);
+						if(point.dominate(point2)) {
+							point.children.add(nextpt);
+							point2.parents.add(pt);
+						}
+					}
+				}				
+			}
+			Iterator<SkylineLayer> iterator = layers.iterator();
+			for(int p = 0; p < k; p++)
+				iterator.next();
+			while(iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+			
+		}
+		
+		
+		
+/*		for(int i=0; i<pSet.size(); i++) {
+	//		System.out.println(i);
 			int currentLayer = pSet.get(i).layer;
 			for(int l_index=0; l_index<currentLayer; l_index++) {
-				SkylineLayer layer= layers.get(l_index);
+				layer= layers.get(l_index);
+				if(i == 6340 && l_index == 429)
+			//		System.out.println(l_index);
 				for(int p: layer.points) {
 					if(pSet.get(p).dominate(pSet.get(i))) {
 						pSet.get(p).children.add(i);
@@ -107,7 +141,7 @@ public class SkylineLayers {
 					}
 				}
 			}
-		}
+		}*/
 
 	}
 	/**

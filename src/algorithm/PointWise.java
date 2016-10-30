@@ -37,9 +37,10 @@ public class PointWise {
   //      skylineLayers.print();
 
 		ResultSet resultSet = new ResultSet();
-		skylineLayers.makeDSG(pointSet);
+		skylineLayers.makeDSG(pointSet, k);
+//		skylineLayers.print();
 		skylineLayers.preProcessing(pointSet, k, resultSet);
-  //      skylineLayers.print();
+//        skylineLayers.print();
 //        System.out.println("done");
         
         long start = System.currentTimeMillis();

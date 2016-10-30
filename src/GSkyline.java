@@ -1,3 +1,5 @@
+import java.util.function.LongToDoubleFunction;
+
 import algorithm.PointWise;
 import algorithm.UnitWise;
 import common.result.ResultSet;
@@ -11,16 +13,19 @@ import common.result.ResultSet;
 public class GSkyline {
 
     public static void main(String[] args) {
-        String path = "E:\\datasets\\test.txt";
-        int k = 4;
+        String path = "datasets\\anti_4.txt";
+        int k = 2;
 
+        
+        
         ResultSet resultSet2 = new PointWise().pointWise(path, k);
 
         ResultSet resultSet = new UnitWise().unitWise(path, k);
                
         System.out.println(path+" "+"k"+k);
 
-        resultSet.print();
-        resultSet2.print();
+    //    resultSet.print();
+     //   resultSet2.print();
+   //     System.out.println(resultSet.sGroups.size()+" hha "+resultSet2.sGroups.size());
     }
 }
