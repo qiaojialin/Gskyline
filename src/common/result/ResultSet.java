@@ -9,6 +9,7 @@ import java.util.List;
  *
  */
 public class ResultSet {
+    public long num = 0;
 	/**
 	 * 合法sgroup集合
 	 */
@@ -18,16 +19,17 @@ public class ResultSet {
      * @param sGroup 给定的合法sgroup
      */
     public void add(SGroup sGroup) {
-        sGroups.add(sGroup);
+//        sGroups.add(sGroup);
+        num++;
     }
     
     /**
      * 打印合法集合
      */
     public void print() {
-        System.out.println("result set has: " + sGroups.size());
-        for(SGroup sGroup: sGroups) {
-            sGroup.print();
-        }
+        System.out.println("result set has: " + num);
+//        for(SGroup sGroup: sGroups) {
+//            sGroup.print();
+//        }
     }
 }

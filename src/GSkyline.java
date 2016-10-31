@@ -16,16 +16,14 @@ public class GSkyline {
         String path = "datasets\\anti_4.txt";
         int k = 2;
 
+        System.out.println(path+" "+"k: "+k);
         
-        
-        ResultSet resultSet2 = new PointWise().pointWise(path, k);
+        ResultSet resultSet1 = new PointWise().pointWise(path, k);
+        resultSet1.print();
 
-        ResultSet resultSet = new UnitWise().unitWise(path, k);
-               
-        System.out.println(path+" "+"k"+k);
+        ResultSet resultSet2 = new UnitWise().unitWise(path, k);
+        resultSet2.print();
 
-    //    resultSet.print();
-     //   resultSet2.print();
    //     System.out.println(resultSet.sGroups.size()+" hha "+resultSet2.sGroups.size());
     }
 }

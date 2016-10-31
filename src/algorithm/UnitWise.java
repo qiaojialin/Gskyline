@@ -33,22 +33,22 @@ public class UnitWise {
 		PointSet pointSet = new PointSet();
 		pointSet.readFromFile(path);
 		pointSet.sort();
-//		System.out.println("1");
-//        pointSet.print();
+		System.out.println("1");
+        pointSet.print();
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
-   //    skylineLayers.print();
-//		System.out.println("2");
+//       skylineLayers.print();
+		System.out.println("2");
 
 		ResultSet resultSet = new ResultSet();
 		skylineLayers.makeDSG(pointSet, k);
 //		 skylineLayers.print();
-//		System.out.println("3");
+		System.out.println("3");
 		skylineLayers.preProcessing(pointSet, k, resultSet);
-      // skylineLayers.print();
-//        System.out.println();
-//		System.out.println("3");
+//       skylineLayers.print();
+        System.out.println();
+		System.out.println("4");
 		
 		long start = System.currentTimeMillis();
 
@@ -97,7 +97,7 @@ public class UnitWise {
 
 
 		for(int i = 0; i< unitSet.size(); i++) {
-//			System.out.println();
+			System.out.println(i);
 //			System.out.println(" 当前处理 u" + unitSet.get(i).index);
 
 			if(lastSize(i) == k) {
