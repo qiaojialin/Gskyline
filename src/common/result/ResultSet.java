@@ -30,4 +30,13 @@ public class ResultSet {
             sGroup.print();
         }
     }
+    
+    public String toString() {
+    	String res = "";
+    	for(SGroup sGroup: sGroups) {
+     //       sGroup.print();
+            res = res + sGroup+"\n";
+        }
+    	return res;
+	}
 }
