@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -127,16 +128,27 @@ public class GSkyline extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String path = filepath.getText();
+				String kString = kField.getText();
+				int k = 0;
+				if(isInteger(kString))
+					k = Integer.parseInt(kString);
+				else {
+					JOptionPane.showMessageDialog(null, "k是数字");
+					return;
+				}
+				
+				
+				
+				
 				if(pwise.isSelected()) {
-					String path = filepath.getText();
-					String kString = kField.getText();
-					int k = Integer.parseInt(kString);
+					
 					
 					long start = System.currentTimeMillis();
 					ResultSet resultSet2 = new PointWise().pointWise(path, k);
 					long end = System.currentTimeMillis();
 					long duration = end - start;
-					String dura = Long.toString(duration);
+					String dura = Long.toString(duration)+"ms";
 					time.setText(dura);
 					
 					long resultsize = resultSet2.sGroups.size();
@@ -148,6 +160,20 @@ public class GSkyline extends JFrame{
 					
 					
 				}else if(uwise.isSelected()) {
+
+					
+					long start = System.currentTimeMillis();
+					ResultSet resultSet2 = new UnitWise().unitWise(path, k);
+					long end = System.currentTimeMillis();
+					long duration = end - start;
+					String dura = Long.toString(duration)+"ms";
+					time.setText(dura);
+					
+					long resultsize = resultSet2.sGroups.size();
+					result.setText(Long.toString(resultsize));
+					
+					String res = resultSet2.toString();
+					fullresult.setText(res);
 					
 				}else {
 					
@@ -183,7 +209,7 @@ public class GSkyline extends JFrame{
 		panel6.add(Box.createHorizontalStrut(5));
 		fullresult = new JTextArea(6,25);
 		JScrollPane scroll = new JScrollPane (fullresult, 
-				   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+				   JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panel6.add(scroll);
 		add(panel6);
 		
@@ -192,7 +218,18 @@ public class GSkyline extends JFrame{
 		
 	}
 	
-	
+	public boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    } catch(NullPointerException e) {
+	        return false;
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+
 	
 	
 
@@ -200,18 +237,18 @@ public class GSkyline extends JFrame{
     	GSkyline testwindow = new GSkyline();
     	testwindow.setVisible(true);
     	
-        String path = "datasets\\corr_2.txt";
-        int k = 2;
+        String path = "datasets\\corr_4.txt";
+        int k = 3;
 
         
         
-        ResultSet resultSet2 = new PointWise().pointWise(path, k);
+ //       ResultSet resultSet2 = new PointWise().pointWise(path, k);
 
-        ResultSet resultSet = new UnitWise().unitWise(path, k);
+ //       ResultSet resultSet = new UnitWise().unitWise(path, k);
                
         System.out.println(path+" "+"k"+k);
 
-        resultSet.print();
-        resultSet2.print();
+  //      resultSet.print();
+  //      resultSet2.print();
     }
 }
