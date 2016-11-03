@@ -5,6 +5,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.function.LongToDoubleFunction;
 
 import javax.swing.Box;
@@ -131,10 +132,20 @@ public class GSkyline extends JFrame{
 				String path = filepath.getText();
 				String kString = kField.getText();
 				int k = 0;
-				if(isInteger(kString))
+				if(isInteger(kString)) {
 					k = Integer.parseInt(kString);
+					if(k < 2) {
+						JOptionPane.showMessageDialog(null, "k的范围2-5");
+						return;
+					}
+				}
 				else {
 					JOptionPane.showMessageDialog(null, "k是数字");
+					return;
+				}
+				if (!new File(path).exists())
+				{
+					JOptionPane.showMessageDialog(null, "文件路径有误");
 					return;
 				}
 				
@@ -144,11 +155,10 @@ public class GSkyline extends JFrame{
 				if(pwise.isSelected()) {
 					
 					
-					long start = System.currentTimeMillis();
-					ResultSet resultSet2 = new PointWise().pointWise(path, k);
-					long end = System.currentTimeMillis();
-					long duration = end - start;
-					String dura = Long.toString(duration)+"ms";
+					PointWise tmPointWise = new PointWise();
+					ResultSet resultSet2 = tmPointWise.pointWise(path, k);
+
+					String dura = Long.toString(tmPointWise.time)+"ms";
 					time.setText(dura);
 					
 					long resultsize = resultSet2.sGroups.size();
@@ -161,12 +171,10 @@ public class GSkyline extends JFrame{
 					
 				}else if(uwise.isSelected()) {
 
-					
-					long start = System.currentTimeMillis();
-					ResultSet resultSet2 = new UnitWise().unitWise(path, k);
-					long end = System.currentTimeMillis();
-					long duration = end - start;
-					String dura = Long.toString(duration)+"ms";
+					UnitWise tmUnitWise = new UnitWise();
+					ResultSet resultSet2 = tmUnitWise.unitWise(path, k);
+
+					String dura = Long.toString(tmUnitWise.time)+"ms";
 					time.setText(dura);
 					
 					long resultsize = resultSet2.sGroups.size();
@@ -176,16 +184,33 @@ public class GSkyline extends JFrame{
 					fullresult.setText(res);
 					
 				}else {
-					
+					JOptionPane.showMessageDialog(null, "请选择一个算法");
 				}
 				// TODO Auto-generated method stub
 				
 			}
 		});
 		
-		end = new JButton("停止计算");
+		end = new JButton("全部清空");
+		
+		end.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				filepath.setText("");
+				kField.setText("");
+				result.setText("");
+				fullresult.setText("");
+				time.setText("");
+				pwise.setSelected(false);
+				uwise.setSelected(false);
+				
+			}
+		});
+		
 		panel4.add(start);
-		panel4.add(Box.createHorizontalStrut(20));
+		panel4.add(Box.createHorizontalStrut(45));
 		panel4.add(end);
 		add(panel4);
 		

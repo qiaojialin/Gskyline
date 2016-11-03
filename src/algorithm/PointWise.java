@@ -19,7 +19,7 @@ import java.util.Iterator;
  */
 
 public class PointWise {
-	
+	public long time = 0;
 	/**
 	 * 通过对原始数据进行读取，生成skyline layer，创建DSG图，预处理剪枝，pointwise算法处理，生成所有的GSkyline集合
 	 * @param path 原始数据路径
@@ -49,6 +49,7 @@ public class PointWise {
 		
 		long end = System.currentTimeMillis();
 		System.out.println("PointWise"+(end-start));
+		time = end - start;
 		
 		for(SGroup sgroup: tmpResult)
 			resultSet.add(sgroup);

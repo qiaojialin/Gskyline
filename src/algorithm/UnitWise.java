@@ -20,7 +20,7 @@ public class UnitWise {
 	/**
 	 * 储存unit集合
 	 */
-
+	public long time;
 	private List<Unit> unitSet = new ArrayList<>(); //初始单元素unit的集合
 	
 	/**
@@ -55,6 +55,7 @@ public class UnitWise {
 		new UnitWise().generateGroups(skylineLayers, pointSet, k, resultSet);
 		
 		long end = System.currentTimeMillis();
+		time = end - start;
 		System.out.println("UnitWise"+(end-start));
 		return resultSet;
 	}
