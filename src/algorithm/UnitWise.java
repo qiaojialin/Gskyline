@@ -34,7 +34,7 @@ public class UnitWise {
 		pointSet.readFromFile(path);
 		pointSet.sort();
 		System.out.println("1");
-        pointSet.print();
+  //      pointSet.print();
 
 		SkylineLayers skylineLayers = new SkylineLayers();
 		skylineLayers.createSkylineLayers(pointSet);
@@ -97,7 +97,7 @@ public class UnitWise {
 
 
 		for(int i = 0; i< unitSet.size(); i++) {
-			System.out.println(i);
+//			System.out.println(i);
 //			System.out.println(" 当前处理 u" + unitSet.get(i).index);
 
 			if(lastSize(i) == k) {

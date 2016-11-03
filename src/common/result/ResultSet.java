@@ -28,8 +28,12 @@ public class ResultSet {
      */
     public void print() {
         System.out.println("result set has: " + num);
-//        for(SGroup sGroup: sGroups) {
-//            sGroup.print();
-//        }
+        int cnt = 0;
+ //   	for(SGroup sGroup: sGroups) {
+ //           sGroup.print();
+ //           cnt++;
+ //       }
+  //  	System.out.println(cnt+"haha");
+    
     }
 }

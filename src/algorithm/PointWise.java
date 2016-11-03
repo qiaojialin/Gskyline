@@ -41,17 +41,19 @@ public class PointWise {
 //		skylineLayers.print();
 		skylineLayers.preProcessing(pointSet, k, resultSet);
 //        skylineLayers.print();
-//        System.out.println("done");
         
         long start = System.currentTimeMillis();
+        
+        PointWise test = new PointWise();
+        List<SGroup> tmpResult = test.generateGroups(skylineLayers.layers, pointSet, k-1);
+        test.saveMem(skylineLayers.layers, pointSet, tmpResult, resultSet);
 
-		List<SGroup> tmpResult = new PointWise().generateGroups(skylineLayers.layers, pointSet, k);
+
 		
 		long end = System.currentTimeMillis();
 		System.out.println("PointWise"+(end-start));
-		
-		for(SGroup sgroup: tmpResult)
-			resultSet.add(sgroup);
+
+
 		return resultSet;
 	}
 	
@@ -129,6 +131,47 @@ public class PointWise {
 		
 
 	}
+	
+	public void saveMem(List<SkylineLayer> layers, PointSet pointSet, List<SGroup> interResult, ResultSet newresult) {
+		for(SGroup sg: interResult) {
+			//求出每一个元素的CS，合并成CS集合
+			ArrayList<Integer> childrenSet = new ArrayList<>();
+			for(Integer tmp: sg.points) {
+				Point pl = pointSet.pSet.get(tmp);
+				childrenSet.addAll(pl.children);
+			}
+			//求这个sgroup中的所有元素的最大层数
+			int max = maxLayer(sg, pointSet);
+			//求这个sgroup的tailset,并对其进行剪枝
+			List<Integer> tailSet = getTailSet(layers, sg, pointSet);
+
+			
+			Iterator<Integer> it = tailSet.iterator();
+			while(it.hasNext()) {
+				Integer pt = it.next();
+				if(!childrenSet.contains(pt) && !isSkylineLayer(pt, pointSet)) {
+					it.remove();
+					continue;
+				}
+				Point pj = pointSet.pSet.get(pt);
+				if(pj.layer - max >= 2)
+					it.remove();					
+			}
+			
+			ArrayList<Integer> a = null;
+			
+			for(Integer etailp: tailSet) {
+				a = new ArrayList<>();
+				a.addAll(sg.points);
+				a.add(etailp);
+				SGroup tmpGroup = new SGroup(a);
+				if(isValidSGroup(tmpGroup, pointSet))
+					newresult.add(tmpGroup);
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Sgroup中的点的最大层数
