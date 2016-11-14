@@ -262,18 +262,18 @@ public class GSkyline extends JFrame{
     	GSkyline testwindow = new GSkyline();
     	testwindow.setVisible(true);
     	
-        String path = "datasets\\corr_4.txt";
-        int k = 3;
+        String path = "datasets\\corr_2.txt";
+        int k = 4;
 
         
         
- //       ResultSet resultSet2 = new PointWise().pointWise(path, k);
+        ResultSet resultSet2 = new PointWise().pointWise(path, k);
 
- //       ResultSet resultSet = new UnitWise().unitWise(path, k);
+        ResultSet resultSet = new UnitWise().unitWise(path, k);
                
         System.out.println(path+" "+"k"+k);
 
-  //      resultSet.print();
-  //      resultSet2.print();
+        resultSet.print();
+        resultSet2.print();
     }
 }
