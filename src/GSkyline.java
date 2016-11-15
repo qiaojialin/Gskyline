@@ -13,8 +13,8 @@ import common.result.ResultSet;
 public class GSkyline {
 
     public static void main(String[] args) {
-        String path = "datasets\\anti_2.txt";
-        int k = 4;
+        String path = "datasets\\anti_8.txt";
+        int k = 2;
 
         System.out.println(path+" "+"k: "+k);
         
