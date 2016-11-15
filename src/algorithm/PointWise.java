@@ -45,8 +45,9 @@ public class PointWise {
         long start = System.currentTimeMillis();
         
         PointWise test = new PointWise();
-        List<SGroup> tmpResult = test.generateGroups(skylineLayers.layers, pointSet, k-1);
-        test.saveMem(skylineLayers.layers, pointSet, tmpResult, resultSet);
+      //  List<SGroup> tmpResult = test.generateGroups(skylineLayers.layers, pointSet, k-1);
+      //  test.saveMem(skylineLayers.layers, pointSet, tmpResult, resultSet);
+        test.generateGroupsRecursive(skylineLayers.layers, pointSet, k, resultSet);
 
 
 		
@@ -170,6 +171,79 @@ public class PointWise {
 			}
 		}
 	}
+	
+	public void generateGroupsRecursive(List<SkylineLayer> layers, PointSet pointSet, int k, ResultSet newresult) {
+		//	System.out.println("layers size:"+layers.size());
+			
+			
+			if(layers == null || pointSet == null)
+				System.out.println("layers is null or pointset is null");
+			ArrayList<SGroup> initialgroup = new ArrayList<>();
+		//	List<SGroup> result = newresult.sGroups;
+			
+			//initial for the k = 1
+			List<Integer> initialset = layers.get(0).points;		
+			for(Integer i: initialset) {
+				ArrayList<Integer> initial = new ArrayList<>();
+				initial.add(i);
+				SGroup group = new SGroup(initial);
+				initialgroup.add(group);			
+			}
+			
+			for(SGroup sg: initialgroup) {
+				helper(sg, 1, k, pointSet, layers, newresult);
+			}
+			
+			
+			
+			//return result;
+			
+
+		}
+		
+		
+		//recursive helper of pointwise
+		public void helper(SGroup group, int k, int targetk, PointSet pointSet, List<SkylineLayer> layers, ResultSet result) {
+			if(k == targetk) {
+				if(isValidSGroup(group, pointSet))
+					result.add(group);
+				return;
+			}
+			
+			//求出每一个元素的CS，合并成CS集合
+			ArrayList<Integer> childrenSet = new ArrayList<>();
+			for(Integer tmp: group.points) {
+				Point pl = pointSet.pSet.get(tmp);
+				childrenSet.addAll(pl.children);
+			}
+			//求这个sgroup中的所有元素的最大层数
+			int max = maxLayer(group, pointSet);
+			//求这个sgroup的tailset,并对其进行剪枝
+			List<Integer> tailSet = getTailSet(layers, group, pointSet);
+
+			
+			Iterator<Integer> it = tailSet.iterator();
+			while(it.hasNext()) {
+				Integer pt = it.next();
+				if(!childrenSet.contains(pt) && !isSkylineLayer(pt, pointSet)) {
+					it.remove();
+					continue;
+				}
+				Point pj = pointSet.pSet.get(pt);
+				if(pj.layer - max >= 2)
+					it.remove();					
+			}
+			
+			for(Integer etailp: tailSet) {
+				ArrayList<Integer> a = new ArrayList<>();
+				a.addAll(group.points);
+				a.add(etailp);
+				SGroup tmpGroup = new SGroup(a);
+				helper(tmpGroup, k+1, targetk, pointSet, layers, result);
+			}
+			
+			
+		}
 	
 	
 	

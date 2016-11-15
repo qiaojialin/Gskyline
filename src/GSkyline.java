@@ -13,13 +13,13 @@ import common.result.ResultSet;
 public class GSkyline {
 
     public static void main(String[] args) {
-        String path = "datasets\\corr_6.txt";
+        String path = "datasets\\anti_2.txt";
         int k = 4;
 
         System.out.println(path+" "+"k: "+k);
         
-  //      ResultSet resultSet1 = new PointWise().pointWise(path, k);
-  //      resultSet1.print();
+        ResultSet resultSet1 = new PointWise().pointWise(path, k);
+        resultSet1.print();
 
         ResultSet resultSet2 = new UnitWise().unitWise(path, k);
        resultSet2.print();
